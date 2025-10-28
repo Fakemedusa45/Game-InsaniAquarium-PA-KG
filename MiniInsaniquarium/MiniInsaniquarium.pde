@@ -6,6 +6,8 @@ PGraphics bgLayer;
 SoundFile suaraPlop;
 SoundFile suaraKoin;
 SoundFile suaraBeli;
+SoundFile bgm;
+ 
 
 // MODUL 5 (OOP): Menggunakan ArrayList untuk menampung banyak objek
 ArrayList<Ikan> daftarIkan = new ArrayList<Ikan>();
@@ -35,13 +37,14 @@ void setup() {
 
   // Load suara (Modul 4)
   // Ini aman meski file tidak ada, karena ada try-catch
-  try {
+   try {
     suaraPlop = new SoundFile(this, "SE/plop.mp3");
     suaraKoin = new SoundFile(this, "SE/coin.mp3");
     suaraBeli = new SoundFile(this, "SE/purchase.mp3");
-  }
-  catch (Exception e) {
-    println("File suara tidak ditemukan. Tidak apa-apa, game tetap jalan.");
+    bgm = new SoundFile(this, "SE/bgm_gameplay.mp3"); // Ganti dengan path file BGM Anda
+    bgm.loop(); // Mainkan BGM secara loop agar terus berputar selama gameplay
+  } catch (Exception e) {
+    println("File suara atau BGM tidak ditemukan. Tidak apa-apa, game tetap jalan.");
   }
 }
 
@@ -83,11 +86,17 @@ void draw() {
   }
 
   // 2. Ikan
-  for (Ikan ikan : daftarIkan) {
-    ikan.update(); // Ganti berenang() -> update()
-    ikan.tampil();
-    ikan.findFood(daftarMakanan); // Ganti cariMakan() -> findFood()
+  for (int i = daftarIkan.size() - 1; i >= 0; i--) {
+  Ikan ikan = daftarIkan.get(i);
+  ikan.update(); // Ganti berenang() -> update()
+  ikan.tampil();
+  ikan.findFood(daftarMakanan); // Ganti cariMakan() -> findFood()
+  
+  // Jika ikan mati dan alpha sudah 0, hapus dari daftar
+  if (!ikan.isAlive && ikan.alpha <= 0) {
+    daftarIkan.remove(i);
   }
+}
 
   // 3. Koin
   for (int i = daftarKoin.size() - 1; i >= 0; i--) {
