@@ -1,6 +1,7 @@
 // MODUL 4: Import Sound Library
 import processing.sound.*;
-
+PImage bg;
+PGraphics bgLayer;
 // Deklarasi SoundFile (opsional, bisa dihapus jika tidak pakai)
 SoundFile suaraPlop;
 SoundFile suaraKoin;
@@ -22,8 +23,13 @@ Tombol tombolBeliIkan;
 
 void setup() {
   // Ukuran layar 2D standar. P3D dihilangkan.
-  size(800, 600); 
-  
+  size(800, 600);
+   bg = loadImage("img/bg2.png");
+  bgLayer = createGraphics(width, height);
+  bgLayer.beginDraw();
+  bgLayer.image(bg, 0, 0, width, height);
+  bgLayer.endDraw();
+
   // Inisialisasi Tombol (Modul 5 & 4)
   tombolBeliIkan = new Tombol(20, 20, 150, 40, "Beli Ikan (50)");
 
@@ -33,19 +39,23 @@ void setup() {
     suaraPlop = new SoundFile(this, "SE/plop.mp3");
     suaraKoin = new SoundFile(this, "SE/coin.mp3");
     suaraBeli = new SoundFile(this, "SE/purchase.mp3");
-  } catch (Exception e) {
+  }
+  catch (Exception e) {
     println("File suara tidak ditemukan. Tidak apa-apa, game tetap jalan.");
   }
 }
 
 void draw() {
   // MODUL 1 (Continuous Mode): 'draw()' mengulang terus menerus
-  
+
   // === INI ADALAH GAME 2D UTAMA ===
-  
+
   // Latar belakang akuarium
-  background(100, 150, 255); // Biru air
-  
+ image(bgLayer, 0, 0); 
+ fill(100, 150, 255, 2); // warna biru muda dengan alpha 20
+ noStroke();
+ rect(0, 0, width, height); 
+
   // MODUL 2 (Kurva): Gambar rumput laut statis
   noStroke();
   fill(50, 200, 50);
@@ -60,7 +70,7 @@ void draw() {
   endShape();
 
   // MODUL 2 (Loop): Jalankan semua objek di ArrayList
-  
+
   // 1. Makanan
   for (int i = daftarMakanan.size() - 1; i >= 0; i--) {
     Makanan m = daftarMakanan.get(i);
@@ -89,10 +99,10 @@ void draw() {
       daftarKoin.remove(i);
     }
   }
-  
+
   // MODUL 4 (GUI): Tampilkan GUI (Tombol dan Teks)
   tombolBeliIkan.tampil();
-  
+
   fill(255);
   textSize(24);
   textAlign(RIGHT);
