@@ -30,9 +30,9 @@ void setup() {
   // Load suara (Modul 4)
   // Ini aman meski file tidak ada, karena ada try-catch
   try {
-    suaraPlop = new SoundFile(this, "plop.wav");
-    suaraKoin = new SoundFile(this, "coin.wav");
-    suaraBeli = new SoundFile(this, "buy.wav");
+    suaraPlop = new SoundFile(this, "SE/plop.mp3");
+    suaraKoin = new SoundFile(this, "SE/coin.mp3");
+    suaraBeli = new SoundFile(this, "SE/purchase.mp3");
   } catch (Exception e) {
     println("File suara tidak ditemukan. Tidak apa-apa, game tetap jalan.");
   }
@@ -107,7 +107,7 @@ void mousePressed() {
     if (uang >= hargaIkan) {
       uang -= hargaIkan;
       daftarIkan.add(new Ikan(width / 2, height / 2)); // <-- INI DIA PERUBAHANNYA
-      //if (suaraBeli != null) suaraBeli.play();
+      if (suaraBeli != null) suaraBeli.play();
     }
     return; // Selesai, jangan jatuhkan makanan
   }
@@ -120,14 +120,14 @@ void mousePressed() {
     if (dist(mouseX, mouseY, k.pos.x, k.pos.y) < k.ukuran/2) {
       uang += k.nilai;
       daftarKoin.remove(i); // Hapus koin
-      //if (suaraKoin != null) suaraKoin.play();
+      if (suaraKoin != null) suaraKoin.play();
       return; // Selesai, jangan jatuhkan makanan
     }
   }
 
   // 3. Jika tidak klik apa-apa, jatuhkan makanan
   daftarMakanan.add(new Makanan(mouseX, mouseY));
-  //if (suaraPlop != null) suaraPlop.play();
+  if (suaraPlop != null) suaraPlop.play();
 }
 
 // MODUL 4 (GUI - Event Keyboard)
