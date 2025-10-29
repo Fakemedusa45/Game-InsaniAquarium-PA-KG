@@ -1,4 +1,4 @@
-// ==================================
+  // ==================================
 // MINI INSANIQUARIUM - MAIN FILE (RESPONSIVE)
 // Dengan 3D Menu dan Gameplay Integration
 // ==================================
@@ -125,31 +125,13 @@ void drawGameplay() {
   
   // Background
   if (bg != null) {
-    background(bg);
+    // PERBAIKAN: Gunakan image() untuk merentangkan gambar
+    image(bg, 0, 0, width, height);
   } else {
     background(20, 40, 80);
   }
   
-  // Overlay biru semi-transparent
-  fill(100, 150, 255, 15);
-  noStroke();
-  box(width, height, 1);
-  
-  // MODUL 2 (Kurva): Rumput laut
-  noStroke();
-  fill(50, 200, 50);
-  pushMatrix();
-  translate(100, height/2, 0);
-  beginShape();
-  curveVertex(0, 100);
-  curveVertex(0, 100);
-  curveVertex(20, 50);
-  curveVertex(30, -50);
-  curveVertex(10, -150);
-  curveVertex(40, 100);
-  curveVertex(40, 100);
-  endShape();
-  popMatrix();
+ 
   
   // Update dan render Makanan
   for (int i = daftarMakanan.size() - 1; i >= 0; i--) {
