@@ -67,6 +67,8 @@ void setup() {
   catch (Exception e) {
     println("File audio tidak ditemukan. Permainan lanjut tanpa suara.");
   }
+  surface.setResizable(true);    
+  surface.setLocation(200, 100);
 }
 
 void draw() {
@@ -164,7 +166,7 @@ void drawGameplay() {
   fill(255, 255, 0);
   textSize(32);
   textAlign(LEFT);
-  text("$" + uang, 30, 50); // Uang di kiri atas
+  text("$" + uang, 710, 50); // Uang di kanan atas
 
   // --- PERUBAHAN DI SINI ---
   // Tombol "MENU" dipindah ke pojok kanan Bawah

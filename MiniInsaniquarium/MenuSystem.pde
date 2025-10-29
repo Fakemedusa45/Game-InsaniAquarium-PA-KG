@@ -18,55 +18,41 @@ class MenuSystem {
     initializeBubbles();
   }
 
-  void initializeButtons() {
-    buttons = new ArrayList<Menu3DButton>();
-    int centerX = screenWidth / 2;
-    int centerY = screenHeight / 2;
+ void initializeButtons() {
+  buttons = new ArrayList<Menu3DButton>();
+  int centerX = screenWidth / 2;
+  int centerY = screenHeight / 2;
 
-    int buttonWidth = (int)(screenWidth * 0.3);
-    int buttonHeight = (int)(screenHeight * 0.08);
-    int verticalSpacing = (int)(screenHeight * 0.15);
+  int buttonWidth = (int)(screenWidth * 0.3);
+  int buttonHeight = (int)(screenHeight * 0.08);
+  int verticalSpacing = (int)(screenHeight * 0.07); // 🔹 lebih rapat dari sebelumnya (0.12 → 0.07)
 
+  String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "KELUAR" };
+  color[] colors = {
+    color(0, 212, 255),
+    color(255, 215, 0),
+    color(160, 160, 160),
+    color(255, 107, 107)
+  };
+
+  // Hitung total tinggi semua tombol (untuk posisi tengah vertikal)
+  int totalHeight = labels.length * buttonHeight + (labels.length - 1) * verticalSpacing;
+  int startY = centerY - totalHeight / 2;
+
+  for (int i = 0; i < labels.length; i++) {
+    int y = startY + i * (buttonHeight + verticalSpacing);
     buttons.add(new Menu3DButton(
-      centerX - buttonWidth/2,
-      centerY - verticalSpacing - verticalSpacing,
+      centerX - buttonWidth / 2,
+      y,
       buttonWidth,
       buttonHeight,
-      "MULAI",
-      color(0, 212, 255),
-      1
-      ));
-
-    buttons.add(new Menu3DButton(
-      centerX - buttonWidth/2,
-      centerY - verticalSpacing,
-      buttonWidth,
-      buttonHeight,
-      "CARA BERMAIN",
-      color(255, 215, 0),
-      2
-      ));
-
-    buttons.add(new Menu3DButton(
-      centerX - buttonWidth/2,
-      centerY + verticalSpacing,
-      buttonWidth,
-      buttonHeight,
-      "PENGATURAN",
-      color(160, 160, 160),
-      3
-      ));
-
-    buttons.add(new Menu3DButton(
-      centerX - buttonWidth/2,
-      centerY + verticalSpacing + verticalSpacing,
-      buttonWidth,
-      buttonHeight,
-      "KELUAR",
-      color(255, 107, 107),
-      4
-      ));
+      labels[i],
+      colors[i],
+      i + 1
+    ));
   }
+}
+
 
   void initializeBubbles() {
     bubbles = new ArrayList<Bubble3D>();
