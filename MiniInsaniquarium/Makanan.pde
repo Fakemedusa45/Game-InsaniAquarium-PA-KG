@@ -1,4 +1,4 @@
-// MODUL 5: Membuat class Makanan
+
 class Makanan {
 
   PVector pos;
@@ -10,7 +10,6 @@ class Makanan {
   }
 
   void tampil() {
-    // MODUL 1 (Bentuk Dasar)
     noStroke();
     fill(100, 60, 20); // Coklat
     ellipse(pos.x, pos.y, 8, 8);

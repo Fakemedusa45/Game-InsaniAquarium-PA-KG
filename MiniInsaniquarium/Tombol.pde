@@ -1,9 +1,7 @@
 
 class Tombol {
-
   float x, y, w, h;
   String label;
-
   Tombol(float x, float y, float w, float h, String label) {
     this.x = x;
     this.y = y;

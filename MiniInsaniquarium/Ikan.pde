@@ -1,4 +1,4 @@
-// MODUL 5: Membuat class Ikan
+
 class Ikan {
   
   // --- Properti Baru (berdasarkan kode Anda) ---
@@ -79,7 +79,6 @@ class Ikan {
     setNewRandomTarget(); // Setelah makan, cari target acak baru
   }
   
-  // Method lama (sudah ada, tapi disederhanakan)
   void jatuhkanKoin() {
     daftarKoin.add(new Koin(pos.x, pos.y, 10)); // Hanya drop koin
   }
@@ -122,13 +121,9 @@ class Ikan {
     hunger += 0.05;
     hunger = constrain(hunger, 0, 100); // Batasi 0-100
   }
-
-  // --- LOGIKA TAMPIL BARU (menggunakan 'rotate()') ---
  void tampil() {
     // Jika alpha <= 0, jangan tampilkan
     if (alpha <= 0) return;
-    
-    // MODUL 3 (Transformasi): rotate, translate
     pushMatrix();
     translate(pos.x, pos.y);
     
@@ -136,8 +131,6 @@ class Ikan {
     // Gunakan 'vel' (kecepatan) untuk menentukan rotasi
     float angle = atan2(vel.y, vel.x);
     rotate(angle);
-    
-    // MODUL 1 (Bentuk Dasar) - Bentuk random: Bezier atau Ellipse
     noStroke();
     
     // Tubuh: Bezier atau Ellipse berdasarkan useBezier
@@ -150,11 +143,9 @@ class Ikan {
       bezierVertex(ukuran/4, ukuran/3, -ukuran/4, ukuran/3, -ukuran/2, 0); // Lengkung bawah tubuh
       endShape(CLOSE);
     } else {
-      // Bentuk Ellipse (seperti sebelumnya)
       ellipse(0, 0, ukuran, ukuran * 0.7);
     }
     
-    // Ekor: Bezier atau Triangle berdasarkan useBezier
     fill(255, 150, 0, alpha); // Warna ekor tetap
     if (useBezier) {
       // Ekor Bezier
@@ -163,11 +154,9 @@ class Ikan {
       bezierVertex(-ukuran, -ukuran/4, -ukuran * 1.2, 0, -ukuran, ukuran/4); // Lengkung ekor
       endShape();
     } else {
-      // Ekor Triangle (seperti sebelumnya)
       triangle(-ukuran/2, 0, -ukuran, -ukuran/3, -ukuran, ukuran/3);
     }
     
-    // Mata: Jika hidup, gambar ellipse; jika mati, gambar X
     if (isAlive) {
       fill(0, alpha);
       ellipse(ukuran/4, -ukuran/8, 3, 3);

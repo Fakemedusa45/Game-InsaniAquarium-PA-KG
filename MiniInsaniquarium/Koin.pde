@@ -1,4 +1,4 @@
-// MODUL 5: Membuat class Koin
+
 class Koin {
 
   PVector pos;
@@ -14,7 +14,6 @@ class Koin {
   }
 
   void tampil() {
-    // MODUL 3 (Transformasi): Koin berputar saat jatuh
     pushMatrix();
     translate(pos.x, pos.y);
     rotate(sudutPutar);
