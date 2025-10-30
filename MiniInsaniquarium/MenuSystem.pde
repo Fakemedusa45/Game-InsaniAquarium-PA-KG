@@ -1,6 +1,3 @@
-// ==================================
-// MENU SYSTEM - 3D Menu (RESPONSIVE) - FIXED
-// ==================================
 
 class MenuSystem {
   int screenWidth, screenHeight;
@@ -25,7 +22,7 @@ class MenuSystem {
 
   int buttonWidth = (int)(screenWidth * 0.3);
   int buttonHeight = (int)(screenHeight * 0.08);
-  int verticalSpacing = (int)(screenHeight * 0.07); // 🔹 lebih rapat dari sebelumnya (0.12 → 0.07)
+  int verticalSpacing = (int)(screenHeight * 0.07); 
 
   String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "KELUAR" };
   color[] colors = {

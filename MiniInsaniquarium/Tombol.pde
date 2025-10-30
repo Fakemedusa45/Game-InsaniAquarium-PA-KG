@@ -1,4 +1,4 @@
-// MODUL 5: Membuat class Tombol
+
 class Tombol {
 
   float x, y, w, h;
@@ -13,10 +13,8 @@ class Tombol {
   }
 
   void tampil() {
-    // MODUL 1 (Bentuk Dasar)
     stroke(255);
     strokeWeight(2);
-    // MODUL 2 (Percabangan 'if'): Ubah warna jika mouse di atasnya
     if (isDiKlik(mouseX, mouseY)) {
       fill(100, 200, 100); // Hijau saat hover
     } else {

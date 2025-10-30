@@ -1,98 +1,88 @@
-// ==================================
-// MINI INSANIQUARIUM - MAIN FILE
-// Versi dengan Pop-up Konfirmasi Global
-// Tombol MENU dipindah ke kanan bawah
-// ==================================
-
-import processing.sound.*;
-
-// MODUL 4: Sound
-SoundFile suaraPlop;
-SoundFile suaraKoin;
-SoundFile suaraBeli;
-SoundFile bgm;
-
-// MODUL 5: Game Objects
-// PASTIKAN ANDA MEMILIKI FILE: Ikan.pde, Makanan.pde, Koin.pde, Tombol.pde
-ArrayList<Ikan> daftarIkan = new ArrayList<Ikan>();
+import processing.sound.*; // Import library suara bawaan Processing
+SoundFile suaraPlop; // Suara saat makanan dijatuhkan
+SoundFile suaraKoin; // Suara saat koin diambil
+SoundFile suaraBeli; // Suara saat membeli ikan
+SoundFile bgm;       // Musik latar permainan
+ArrayList<Ikan> daftarIkan = new ArrayList<Ikan>(); 
 ArrayList<Makanan> daftarMakanan = new ArrayList<Makanan>();
 ArrayList<Koin> daftarKoin = new ArrayList<Koin>();
+int uang = 100;         // Uang awal pemain
+int hargaIkan = 50;     // Harga per ikan
+Tombol tombolBeliIkan;  // Tombol untuk membeli ikan
 
-// Variabel Game
-int uang = 100;
-int hargaIkan = 50;
-Tombol tombolBeliIkan;
-
-// Background
-PImage bg;
+// ===== Background =====
+PImage bg; // Gambar latar belakang
 
 // ===== MENU SYSTEM =====
-MenuSystem menuScreen;
+MenuSystem menuScreen; // Objek sistem menu
+
+// Daftar state permainan
 enum GameState {
-  MENU,
-  GAMEPLAY,
-  HOW_TO_PLAY,
-  SETTINGS,
-  CONFIRM_EXIT // State untuk pop-up
+  MENU,          // Layar menu utama
+  GAMEPLAY,      // Layar permainan utama
+  HOW_TO_PLAY,   // Layar "cara bermain"
+  SETTINGS,      // Layar pengaturan
+  CONFIRM_EXIT   // Pop-up konfirmasi keluar
 }
+
+// State awal permainan
 GameState gameState = GameState.MENU;
-GameState stateBeforeConfirm; // <-- Menyimpan state sebelum pop-up
+GameState stateBeforeConfirm; // Menyimpan state sebelum pop-up muncul
 
+// ==================== SETUP ====================
 void setup() {
-  size(800, 600, P3D);
+  size(800, 600, P3D); // Ukuran jendela dan aktifkan mode 3D
 
-  // Load background
+  // Load background image (dengan error handling)
   try {
     bg = loadImage("img/bg2.png");
-  }
-  catch (Exception e) {
+  } catch (Exception e) {
     println("Background image not found - akan pakai warna solid");
-    bg = null;
+    bg = null; // Jika gagal, tidak gunakan gambar
   }
 
-  // Initialize Menu
+  // Inisialisasi sistem menu
   menuScreen = new MenuSystem(width, height);
 
-  // Initialize Game Button
+  // Buat tombol beli ikan di pojok kiri atas
   tombolBeliIkan = new Tombol(20, 20, 150, 40, "Beli Ikan (50)");
 
-  // Load sounds
+  // Load semua efek suara dan musik latar
   try {
     suaraPlop = new SoundFile(this, "SE/plop.mp3");
     suaraKoin = new SoundFile(this, "SE/coin.mp3");
     suaraBeli = new SoundFile(this, "SE/purchase.mp3");
     bgm = new SoundFile(this, "SE/bgm_gameplay.mp3");
-    bgm.loop();
-  }
-  catch (Exception e) {
+    bgm.loop(); // Musik berjalan terus
+  } catch (Exception e) {
     println("File audio tidak ditemukan. Permainan lanjut tanpa suara.");
   }
-  surface.setResizable(true);    
-  surface.setLocation(200, 100);
+
+  surface.setResizable(true);     // Izinkan jendela diubah ukurannya
+  surface.setLocation(200, 100);  // Posisi awal jendela di layar
 }
 
 void draw() {
-  background(10, 20, 40);
+  background(10, 20, 40); // Warna latar default jika tidak ada gambar
 
-  // STATE MANAGEMENT
+  // Kelola tampilan berdasarkan state permainan
   switch(gameState) {
   case MENU:
-    drawMenu();
+    drawMenu(); // Tampilkan menu utama
     break;
   case GAMEPLAY:
-    drawGameplay();
+    drawGameplay(); // Tampilkan gameplay
     break;
   case HOW_TO_PLAY:
     menuScreen.display();
-    menuScreen.drawHowToPlay();
+    menuScreen.drawHowToPlay(); // Tampilkan panduan
     break;
   case SETTINGS:
     menuScreen.display();
-    menuScreen.drawSettings();
+    menuScreen.drawSettings(); // Tampilkan pengaturan
     break;
-    
   case CONFIRM_EXIT:
-    // Gambar layar sebelumnya di belakang
+    // Tampilkan layar sebelumnya di belakang pop-up
     if (stateBeforeConfirm == GameState.GAMEPLAY) {
       drawGameplay();
     } else if (stateBeforeConfirm == GameState.HOW_TO_PLAY) {
@@ -102,176 +92,167 @@ void draw() {
       menuScreen.display();
       menuScreen.drawSettings();
     }
-    // Gambar pop-up di atasnya
-    drawConfirmPopup(); 
+    // Tampilkan pop-up konfirmasi di atasnya
+    drawConfirmPopup();
     break;
   }
 }
 
-// ===== MENU RENDERING =====
 void drawMenu() {
-  menuScreen.display();
+  menuScreen.display(); // Tampilkan animasi/menu utama
 }
 
-// ===== GAMEPLAY RENDERING =====
 void drawGameplay() {
-  lights();
+  lights(); // Aktifkan pencahayaan 3D
 
+  // Gambar background jika tersedia
   if (bg != null) {
     image(bg, 0, 0, width, height);
   } else {
     background(20, 40, 80);
   }
 
-  // Update dan render Makanan, Ikan, Koin...
-  // (Semua loop for... Anda tetap sama)
+  // ===== Render makanan =====
   for (int i = daftarMakanan.size() - 1; i >= 0; i--) {
     if (i < daftarMakanan.size()) {
       Makanan m = daftarMakanan.get(i);
-      m.tampil();
-      m.jatuh();
-      if (m.pos.y > height) {
-        daftarMakanan.remove(i);
-      }
+      m.tampil();  // Gambar makanan
+      m.jatuh();   // Gerakkan makanan ke bawah
+      if (m.pos.y > height) daftarMakanan.remove(i); // Hapus jika keluar layar
     }
   }
+
+  // ===== Render ikan =====
   for (int i = daftarIkan.size() - 1; i >= 0; i--) {
     if (i < daftarIkan.size()) {
       Ikan ikan = daftarIkan.get(i);
-      ikan.update();
-      ikan.tampil();
-      ikan.findFood(daftarMakanan);
-      if (!ikan.isAlive && ikan.alpha <= 0) {
-        daftarIkan.remove(i);
-      }
+      ikan.update();          // Update posisi & kondisi
+      ikan.tampil();          // Gambar ikan
+      ikan.findFood(daftarMakanan); // Cari makanan
+      if (!ikan.isAlive && ikan.alpha <= 0) daftarIkan.remove(i); // Hapus jika mati
     }
   }
+
+  // ===== Render koin =====
   for (int i = daftarKoin.size() - 1; i >= 0; i--) {
     if (i < daftarKoin.size()) {
       Koin k = daftarKoin.get(i);
-      k.tampil();
-      k.jatuh();
-      if (k.pos.y > height) {
-        daftarKoin.remove(i);
-      }
+      k.tampil();  // Gambar koin
+      k.jatuh();   // Gerakkan ke bawah
+      if (k.pos.y > height) daftarKoin.remove(i); // Hapus jika keluar layar
     }
   }
 
-  // RENDER 2D UI (di atas 3D)
-  hint(DISABLE_DEPTH_TEST);
-  perspective();
+  // ===== RENDER UI 2D =====
+  hint(DISABLE_DEPTH_TEST); // Nonaktifkan efek kedalaman 3D sementara
+  perspective(); // Reset proyeksi
 
-  tombolBeliIkan.tampil(); // Tombol "Beli Ikan" di kiri atas
+  tombolBeliIkan.tampil(); // Gambar tombol beli ikan
 
+  // Gambar teks uang di kanan atas
   fill(255, 255, 0);
   textSize(32);
   textAlign(LEFT);
-  text("$" + uang, 710, 50); // Uang di kanan atas
+  text("$" + uang, 710, 50);
 
-  // --- PERUBAHAN DI SINI ---
-  // Tombol "MENU" dipindah ke pojok kanan Bawah
+  // Tombol MENU di kanan bawah
   fill(255, 100, 100);
-  rect(width - 110, height - 60, 90, 40, 5); // x: kanan, y: bawah
+  rect(width - 110, height - 60, 90, 40, 5); // Posisi & ukuran
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(14);
-  text("MENU", width - 65, height - 40); // x: kanan, y: bawah
-  // --- AKHIR PERUBAHAN ---
+  text("MENU", width - 65, height - 40);
 
-  hint(ENABLE_DEPTH_TEST);
+  hint(ENABLE_DEPTH_TEST); // Aktifkan kembali efek 3D
 }
 
-// ===== FUNGSI POP-UP KONFIRMASI =====
+// ==================== POP-UP KONFIRMASI ====================
 void drawConfirmPopup() {
-  // 1. Gambar overlay gelap
   hint(DISABLE_DEPTH_TEST);
-  noLights(); 
-  perspective(); 
+  noLights();
+  perspective();
 
+  // Overlay gelap transparan
   fill(0, 0, 0, 150);
   rect(0, 0, width, height);
 
-  // 2. Gambar kotak modal
+  // Kotak modal di tengah
   float modalWidth = width * 0.6;
   float modalHeight = height * 0.35;
   float modalX = (width - modalWidth) / 2;
   float modalY = (height - modalHeight) / 2;
 
   fill(10, 31, 63);
-  stroke(255, 107, 107); 
+  stroke(255, 107, 107);
   strokeWeight(3);
   rect(modalX, modalY, modalWidth, modalHeight, 20);
 
-  // 3. Gambar Teks (Dinamis)
+  // Teks konfirmasi
   fill(255);
   textAlign(CENTER, CENTER);
   textSize(24);
   text("Kembali ke Menu?", width/2, modalY + 40);
 
   textSize(16);
-  if (stateBeforeConfirm == GameState.GAMEPLAY) {
+  if (stateBeforeConfirm == GameState.GAMEPLAY)
     text("Semua kemajuan di permainan ini akan hilang.", width/2, modalY + 85);
-  } else {
+  else
     text("Anda yakin ingin kembali ke menu utama?", width/2, modalY + 85);
-  }
 
-  // 4. Tombol "YA" (Keluar)
+  // Tombol "YA, KEMBALI"
   float yaX = modalX + 50;
   float yaY = modalY + modalHeight - 70;
   float btnW = (modalWidth / 2) - 70;
   float btnH = 40;
-
   fill(255, 107, 107);
   rect(yaX, yaY, btnW, btnH, 10);
   fill(255);
   text("YA, KEMBALI", yaX + btnW/2, yaY + btnH/2);
 
-  // 5. Tombol "TIDAK" (Batal)
+  // Tombol "TIDAK, BATAL"
   float tidakX = modalX + modalWidth - btnW - 50;
   float tidakY = yaY;
-
   fill(100, 200, 100);
   rect(tidakX, tidakY, btnW, btnH, 10);
   fill(0);
   text("TIDAK, BATAL", tidakX + btnW/2, tidakY + btnH/2);
 
-  hint(ENABLE_DEPTH_TEST); 
+  hint(ENABLE_DEPTH_TEST);
 }
 
-
-// ===== MOUSE INTERACTION (Logika Pop-up Global) =====
+// ==================== INTERAKSI MOUSE ====================
 void mousePressed() {
-  
-  // 1. Logika saat di MENU UTAMA
+  // --- 1. Saat di menu utama ---
   if (gameState == GameState.MENU) {
     int buttonClicked = menuScreen.checkButtonClick(mouseX, mouseY);
-    
-    if (buttonClicked == 1) { // MULAI
+
+    // Tergantung tombol yang diklik
+    if (buttonClicked == 1) { // Mulai game
       gameState = GameState.GAMEPLAY;
-      uang = 100;
+      uang = 500;
       daftarIkan.clear();
       daftarMakanan.clear();
       daftarKoin.clear();
-    } else if (buttonClicked == 2) { // CARA BERMAIN
+    } else if (buttonClicked == 2) { // Cara bermain
       gameState = GameState.HOW_TO_PLAY;
-    } else if (buttonClicked == 3) { // PENGATURAN
+    } else if (buttonClicked == 3) { // Pengaturan
       gameState = GameState.SETTINGS;
-    } else if (buttonClicked == 4) { // KELUAR
+    } else if (buttonClicked == 4) { // Keluar
       exit();
     }
     return;
   }
-  
-  // 2. Logika "KEMBALI" di HOW_TO_PLAY
+
+  // --- 2. Tombol Kembali di "Cara Bermain" ---
   if (gameState == GameState.HOW_TO_PLAY) {
     if (menuScreen.checkBackButton(mouseX, mouseY)) {
-      stateBeforeConfirm = GameState.HOW_TO_PLAY; 
+      stateBeforeConfirm = GameState.HOW_TO_PLAY;
       gameState = GameState.CONFIRM_EXIT;
     }
     return;
   }
-  
-  // 3. Logika "KEMBALI" di SETTINGS
+
+  // --- 3. Tombol Kembali di "Pengaturan" ---
   if (gameState == GameState.SETTINGS) {
     if (menuScreen.checkBackButton(mouseX, mouseY)) {
       stateBeforeConfirm = GameState.SETTINGS;
@@ -280,7 +261,7 @@ void mousePressed() {
     return;
   }
 
-  // 4. Logika saat di layar KONFIRMASI
+
   if (gameState == GameState.CONFIRM_EXIT) {
     float modalWidth = width * 0.6;
     float modalHeight = height * 0.35;
@@ -288,59 +269,58 @@ void mousePressed() {
     float modalY = (height - modalHeight) / 2;
     float btnW = (modalWidth / 2) - 70;
     float btnH = 40;
-    
+
+    // Tombol "YA, KEMBALI"
     float yaX = modalX + 50;
     float yaY = modalY + modalHeight - 70;
     if (mouseX > yaX && mouseX < yaX + btnW && mouseY > yaY && mouseY < yaY + btnH) {
-      gameState = GameState.MENU; // Selalu kembali ke MENU
+      gameState = GameState.MENU; // Kembali ke menu utama
       return;
     }
-    
+
+    // Tombol "TIDAK, BATAL"
     float tidakX = modalX + modalWidth - btnW - 50;
     float tidakY = yaY;
     if (mouseX > tidakX && mouseX < tidakX + btnW && mouseY > tidakY && mouseY < tidakY + btnH) {
-      gameState = stateBeforeConfirm; // KEMBALI KE LAYAR SEBELUMNYA
+      gameState = stateBeforeConfirm; // Kembali ke layar sebelumnya
       return;
     }
-    return; 
+    return;
   }
-  
-  // 5. Logika INTERAKSI GAMEPLAY
+
   if (gameState == GameState.GAMEPLAY) {
-    
-    // --- PERUBAHAN DI SINI ---
-    // Tombol "MENU" di pojok kanan Bawah
+
+    // Tombol MENU kanan bawah
     if (mouseX > width - 110 && mouseX < width - 20 && mouseY > height - 60 && mouseY < height - 20) {
-      stateBeforeConfirm = GameState.GAMEPLAY; 
+      stateBeforeConfirm = GameState.GAMEPLAY;
       gameState = GameState.CONFIRM_EXIT;
-      return; 
+      return;
     }
-    // --- AKHIR PERUBAHAN ---
-    
-    // Tombol Beli Ikan
+
+    // Tombol beli ikan
     if (tombolBeliIkan.isDiKlik(mouseX, mouseY)) {
       if (uang >= hargaIkan) {
-        uang -= hargaIkan;
-        daftarIkan.add(new Ikan(width / 2, height / 2));
-        if (suaraBeli != null) suaraBeli.play();
+        uang -= hargaIkan; // Kurangi uang
+        daftarIkan.add(new Ikan(width / 2, height / 2)); // Tambahkan ikan baru
+        if (suaraBeli != null) suaraBeli.play(); // Mainkan suara beli
       }
-      return; 
+      return;
     }
-    
-    // Koin pickup
+
+    // Ambil koin dengan klik
     for (int i = daftarKoin.size() - 1; i >= 0; i--) {
-      if (i < daftarKoin.size()) { 
+      if (i < daftarKoin.size()) {
         Koin k = daftarKoin.get(i);
         if (dist(mouseX, mouseY, k.pos.x, k.pos.y) < k.ukuran/2) {
-          uang += k.nilai;
-          daftarKoin.remove(i);
+          uang += k.nilai; // Tambah uang
+          daftarKoin.remove(i); // Hapus koin
           if (suaraKoin != null) suaraKoin.play();
-          return; 
+          return;
         }
       }
     }
-    
-    // Drop makanan
+
+    // Jika klik kosong → jatuhkan makanan
     daftarMakanan.add(new Makanan(mouseX, mouseY));
     if (suaraPlop != null) suaraPlop.play();
   }
