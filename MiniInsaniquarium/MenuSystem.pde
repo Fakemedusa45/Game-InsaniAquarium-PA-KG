@@ -1,12 +1,14 @@
-
 class MenuSystem {
   int screenWidth, screenHeight;
   ArrayList<Menu3DButton> buttons;
   ArrayList<Bubble3D> bubbles;
   float glowAmount = 0;
 
-  // Simpan posisi back button
+  // Simpan posisi back & tombol mute
   float backBtnX, backBtnY, backBtnW = 120, backBtnH = 40;
+  float muteBtnX, muteBtnY, muteBtnW = 200, muteBtnH = 50;
+
+  boolean isMuted = false; // status mute musik
 
   MenuSystem(int w, int h) {
     screenWidth = w;
@@ -15,41 +17,41 @@ class MenuSystem {
     initializeBubbles();
   }
 
- void initializeButtons() {
-  buttons = new ArrayList<Menu3DButton>();
-  int centerX = screenWidth / 2;
-  int centerY = screenHeight / 2;
+  void initializeButtons() {
+    buttons = new ArrayList<Menu3DButton>();
+    int centerX = screenWidth / 2;
+    int centerY = screenHeight / 2;
 
-  int buttonWidth = (int)(screenWidth * 0.3);
-  int buttonHeight = (int)(screenHeight * 0.08);
-  int verticalSpacing = (int)(screenHeight * 0.07); 
+    int buttonWidth = (int)(screenWidth * 0.22);
+    int buttonHeight = (int)(screenHeight * 0.065);
+    int verticalSpacing = (int)(screenHeight * 0.055);
 
-  String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "KELUAR" };
-  color[] colors = {
-    color(0, 212, 255),
-    color(255, 215, 0),
-    color(160, 160, 160),
-    color(255, 107, 107)
-  };
+    // Tambahkan tombol TOKO di antara Pengaturan dan Keluar
+    String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "TOKO", "KELUAR" };
+    color[] colors = {
+      color(0, 212, 255),
+      color(255, 215, 0),
+      color(160, 160, 160),
+      color(102, 255, 204),
+      color(255, 107, 107)
+    };
 
-  // Hitung total tinggi semua tombol (untuk posisi tengah vertikal)
-  int totalHeight = labels.length * buttonHeight + (labels.length - 1) * verticalSpacing;
-  int startY = centerY - totalHeight / 2;
+    int totalHeight = labels.length * buttonHeight + (labels.length - 1) * verticalSpacing;
+    int startY = centerY - totalHeight / 2 + (int)(screenHeight * 0.05);
 
-  for (int i = 0; i < labels.length; i++) {
-    int y = startY + i * (buttonHeight + verticalSpacing);
-    buttons.add(new Menu3DButton(
-      centerX - buttonWidth / 2,
-      y,
-      buttonWidth,
-      buttonHeight,
-      labels[i],
-      colors[i],
-      i + 1
-    ));
+    for (int i = 0; i < labels.length; i++) {
+      int y = startY + i * (buttonHeight + verticalSpacing);
+      buttons.add(new Menu3DButton(
+        centerX - buttonWidth / 2,
+        y,
+        buttonWidth,
+        buttonHeight,
+        labels[i],
+        colors[i],
+        i + 1
+      ));
+    }
   }
-}
-
 
   void initializeBubbles() {
     bubbles = new ArrayList<Bubble3D>();
@@ -110,14 +112,14 @@ class MenuSystem {
     for (int i = 0; i < 3; i++) {
       float alpha = 100 * (1 - i * 0.3) * glowAmount;
       fill(0, 255, 200, alpha);
-      text("MINI INSANIQUARIUM", screenWidth/2, screenHeight * 0.15 - i*5);
+      text("MINI INSANIQUARIUM", screenWidth / 2, screenHeight * 0.15 - i * 5);
     }
 
     fill(255);
-    text("MINI INSANIQUARIUM", screenWidth/2, screenHeight * 0.15);
+    text("MINI INSANIQUARIUM", screenWidth / 2, screenHeight * 0.15);
     textSize((int)subtitleSize);
     fill(160, 230, 229);
-    text("~ Kelola Akuarium Impianmu ~", screenWidth/2, screenHeight * 0.22);
+    text("~ Kelola Akuarium Impianmu ~", screenWidth / 2, screenHeight * 0.22);
 
     hint(ENABLE_DEPTH_TEST);
   }
@@ -142,61 +144,102 @@ class MenuSystem {
   }
 
   void drawHowToPlay() {
-    hint(DISABLE_DEPTH_TEST);
-    fill(0, 0, 0, 150);
-    rect(0, 0, screenWidth, screenHeight);
+  // Gambar modal panduan
+  hint(DISABLE_DEPTH_TEST);
+  fill(0, 0, 0, 150);
+  rect(0, 0, screenWidth, screenHeight);
 
-    float modalWidth = screenWidth * 0.85;
-    float modalHeight = screenHeight * 0.85;
-    float modalX = (screenWidth - modalWidth) / 2;
-    float modalY = (screenHeight - modalHeight) / 2;
+  float modalWidth = screenWidth * 0.85;
+  float modalHeight = screenHeight * 0.85;
+  float modalX = (screenWidth - modalWidth) / 2;
+  float modalY = (screenHeight - modalHeight) / 2;
 
-    fill(10, 31, 63);
-    stroke(0, 212, 255);
-    strokeWeight(3);
-    rect(modalX, modalY, modalWidth, modalHeight, 20);
+  fill(10, 31, 63);
+  stroke(0, 212, 255);
+  strokeWeight(3);
+  rect(modalX, modalY, modalWidth, modalHeight, 20);
 
-    fill(0, 212, 255);
-    textAlign(CENTER);
-    textSize((int)(screenHeight * 0.06));
-    text("CARA BERMAIN", screenWidth/2, modalY + 40);
+  // Judul
+  fill(0, 212, 255);
+  textAlign(CENTER);
+  textSize((int)(screenHeight * 0.06));
+  text("CARA BERMAIN", screenWidth / 2, modalY + 50);
 
-    fill(224, 224, 224);
-    textSize((int)(screenHeight * 0.03));
-    textAlign(LEFT);
+  // Isi teks
+  fill(224, 224, 224);
+  textSize((int)(screenHeight * 0.03));
+  textAlign(LEFT);
 
-    float textX = modalX + 30;
-    float textY = modalY + 90;
-    float lineH = screenHeight * 0.04;
+  float textX = modalX + 40;
+  float textY = modalY + 110;
+  float lineH = screenHeight * 0.045;
 
-    text("TUJUAN PERMAINAN:", textX, textY);
-    textY += lineH;
-    text("Beli ikan, beri mereka makan, dan kumpulkan koin untuk memperbesar akuariummu!", textX, textY);
-    textY += lineH * 1.3;
+  text("TUJUAN PERMAINAN:", textX, textY);
+  textY += lineH;
+  text("Beli ikan, beri mereka makan, dan kumpulkan koin!", textX, textY);
+  textY += lineH * 1.5;
 
-    text("LANGKAH BERMAIN:", textX, textY);
-    textY += lineH;
-    text("1. Klik tombol 'Beli Ikan' untuk membeli ikan (harga 50 koin)", textX, textY);
-    textY += lineH;
-    text("2. Klik di mana saja di akuarium untuk memberi makan", textX, textY);
-    textY += lineH;
-    text("3. Ikan akan makan otomatis saat lapar", textX, textY);
-    textY += lineH;
-    text("4. Ambil koin yang dijatuhkan ikan untuk mendapat uang", textX, textY);
-    textY += lineH;
-    text("5. Ikan akan tumbuh besar setelah makan 5 kali!", textX, textY);
+  text("LANGKAH BERMAIN:", textX, textY);
+  textY += lineH;
+  text("1. Klik tombol 'Beli Ikan' untuk membeli ikan (harga 50 koin)", textX, textY);
+  textY += lineH;
+  text("2. Klik di mana saja di akuarium untuk memberi makan", textX, textY);
+  textY += lineH;
+  text("3. Ikan akan makan otomatis saat lapar", textX, textY);
+  textY += lineH;
+  text("4. Ambil koin yang dijatuhkan ikan untuk mendapat uang", textX, textY);
+  textY += lineH;
+  text("5. Ikan tumbuh besar setelah makan 5 kali!", textX, textY);
 
-    drawBackButton(modalY + modalHeight);
+  // Penting banget: tombol digambar SETELAH semua teks dan modal, tapi depth test dimatikan
+  drawBackButton(modalY + modalHeight);
 
-    hint(ENABLE_DEPTH_TEST);
-  }
+  hint(ENABLE_DEPTH_TEST);
+}
+
 
   void drawSettings() {
+    drawModal("PENGATURAN", 
+      new String[]{
+        "Suara: " + (isMuted ? "Nonaktif" : "Aktif"),
+        "Kualitas: Tinggi",
+        "Kesulitan: Normal"
+      });
+
+    // Tombol Mute/Unmute
+    muteBtnX = screenWidth / 2 - muteBtnW / 2;
+    muteBtnY = screenHeight / 2 + 100;
+    fill(isMuted ? color(255, 107, 107) : color(100, 200, 100));
+    rect(muteBtnX, muteBtnY, muteBtnW, muteBtnH, 10);
+    fill(255);
+    textAlign(CENTER, CENTER);
+    textSize(20);
+    text(isMuted ? "Unmute Musik" : "Mute Musik", screenWidth / 2, muteBtnY + muteBtnH / 2);
+
+    drawBackButton(screenHeight * 0.9);
+  }
+
+  void drawShop() {
+    drawModal("TOKO", 
+      new String[]{
+        "Selamat datang di TOKO!",
+        "",
+        "Fitur ini akan segera hadir:",
+        "- Beli ikan langka",
+        "- Beli dekorasi akuarium",
+        "- Upgrade makanan",
+        "- Upgrade kapasitas ikan"
+      });
+
+    drawBackButton(screenHeight * 0.9);
+  }
+
+  void drawModal(String title, String[] lines) {
     hint(DISABLE_DEPTH_TEST);
     fill(0, 0, 0, 150);
     rect(0, 0, screenWidth, screenHeight);
 
-    float modalWidth = screenWidth * 0.7;
+    float modalWidth = screenWidth * 0.8;
     float modalHeight = screenHeight * 0.75;
     float modalX = (screenWidth - modalWidth) / 2;
     float modalY = (screenHeight - modalHeight) / 2;
@@ -209,38 +252,54 @@ class MenuSystem {
     fill(0, 212, 255);
     textAlign(CENTER);
     textSize((int)(screenHeight * 0.06));
-    text("PENGATURAN", screenWidth/2, modalY + 40);
+    text(title, screenWidth / 2, modalY + 50);
 
     fill(224, 224, 224);
-    textSize((int)(screenHeight * 0.04));
+    textSize((int)(screenHeight * 0.03));
     textAlign(LEFT);
 
     float textX = modalX + 40;
-    float textY = modalY + 110;
-    float lineH = screenHeight * 0.06;
+    float textY = modalY + 120;
+    float lineH = screenHeight * 0.045;
 
-    text("Suara: Aktif", textX, textY);
-    textY += lineH;
-    text("Kualitas: Tinggi", textX, textY);
-    textY += lineH;
-    text("Kesulitan: Normal", textX, textY);
-
-    drawBackButton(modalY + modalHeight);
+    for (String line : lines) {
+      text(line, textX, textY);
+      textY += lineH;
+    }
 
     hint(ENABLE_DEPTH_TEST);
   }
 
-  void drawBackButton(float modalBottomY) {
-    backBtnY = modalBottomY - 50;
-    backBtnX = screenWidth/2 - backBtnW/2;
-
-    fill(255, 107, 107);
-    rect(backBtnX, backBtnY, backBtnW, backBtnH, 10);
-    fill(255);
-    textAlign(CENTER, CENTER);
-    textSize(16);
-    text("KEMBALI", screenWidth/2, backBtnY + backBtnH/2);
+  void toggleMute() {
+    isMuted = !isMuted;
+    if (isMuted) {
+      if (bgm != null && bgm.isPlaying()) bgm.stop();
+    } else {
+      if (bgm != null && !bgm.isPlaying()) bgm.loop();
+    }
   }
+
+  boolean checkMuteButton(float mx, float my) {
+    return (mx > muteBtnX && mx < muteBtnX + muteBtnW && my > muteBtnY && my < muteBtnY + muteBtnH);
+  }
+
+void drawBackButton(float modalBottomY) {
+  // Tombol ditempatkan di dalam modal, sedikit di atas bagian bawah
+  backBtnW = 140;
+  backBtnH = 45;
+  backBtnX = screenWidth / 2 - backBtnW / 2;
+  backBtnY = modalBottomY - backBtnH - 20;  // Naik 20px dari bawah modal
+
+  fill(255, 107, 107);
+  stroke(255);
+  strokeWeight(2);
+  rect(backBtnX, backBtnY, backBtnW, backBtnH, 12);
+
+  fill(255);
+  textAlign(CENTER, CENTER);
+  textSize(18);
+  text("KEMBALI", backBtnX + backBtnW / 2, backBtnY + backBtnH / 2);
+}
 
   boolean checkBackButton(float mx, float my) {
     return (mx > backBtnX && mx < backBtnX + backBtnW && my > backBtnY && my < backBtnY + backBtnH);
@@ -248,9 +307,14 @@ class MenuSystem {
 }
 
 // ==================================
-// BUBBLE 3D CLASS
+// CLASS BUBBLE 3D & MENU3DBUTTON
+// (tetap sama seperti sebelumnya)
 // ==================================
 
+
+// ==================================
+// CLASS BUBBLE 3D
+// ==================================
 class Bubble3D {
   float x, y, size, speedY, wobble;
   int screenWidth, screenHeight;
@@ -284,17 +348,16 @@ class Bubble3D {
     sphere(size);
     fill(255, 255, 255, 100);
     pushMatrix();
-    translate(-size/3, -size/3, size/2);
-    sphere(size/4);
+    translate(-size / 3, -size / 3, size / 2);
+    sphere(size / 4);
     popMatrix();
     popMatrix();
   }
 }
 
 // ==================================
-// MENU 3D BUTTON CLASS
+// CLASS MENU 3D BUTTON
 // ==================================
-
 class Menu3DButton {
   float x, y, w, h;
   String label;
@@ -317,12 +380,7 @@ class Menu3DButton {
 
   void update(float mx, float my) {
     isHovered = (mx > x && mx < x + w && my > y && my < y + h);
-    if (isHovered) {
-      hoverAmount += 0.1;
-    } else {
-      hoverAmount -= 0.1;
-    }
-    hoverAmount = constrain(hoverAmount, 0, 1);
+    hoverAmount = constrain(hoverAmount + (isHovered ? 0.1 : -0.1), 0, 1);
   }
 
   void display() {
@@ -351,7 +409,7 @@ class Menu3DButton {
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(16 + hoverAmount * 2);
-    text(label, offsetX + scaledW/2, offsetY + scaledH/2);
+    text(label, offsetX + scaledW / 2, offsetY + scaledH / 2);
 
     hint(ENABLE_DEPTH_TEST);
   }
