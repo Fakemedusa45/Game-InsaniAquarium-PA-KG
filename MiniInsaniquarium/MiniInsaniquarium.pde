@@ -148,10 +148,6 @@ void draw() {
     menuScreen.display();
     menuScreen.drawSettings();
     break;
-  case SHOP:
-    menuScreen.display();
-    menuScreen.drawShop();
-    break;
   case CONFIRM_EXIT:
     if (stateBeforeConfirm == GameState.GAMEPLAY) drawGameplay();
     else if (stateBeforeConfirm == GameState.HOW_TO_PLAY) {
@@ -280,9 +276,7 @@ void drawTopBar() {
   fill(textCerah); 
   textSize(11); 
   textAlign(LEFT, CENTER);
-  text("Food Lv: " + levelMakanan, 135, topBarH / 2 - 5); 
   fill(dekorAktif ? color(100, 255, 100) : color(150));
-  text(dekorAktif ? "✓ Dekor" : "✗ Dekor", 135, topBarH / 2 + 12); 
 
 
   btnMenuX = width - btnMenuW - 15;

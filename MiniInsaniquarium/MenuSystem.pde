@@ -28,7 +28,7 @@ class MenuSystem {
     int buttonHeight = (int)(screenHeight * 0.065);
     int verticalSpacing = (int)(screenHeight * 0.055);
 
-    String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "TOKO", "KELUAR" };
+    String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "KELUAR" };
     color[] colors = {
       color(0, 212, 255),
       color(255, 215, 0),
