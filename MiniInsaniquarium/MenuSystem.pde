@@ -11,23 +11,37 @@ class MenuSystem {
   float muteBtnX, muteBtnY, muteBtnW = 200, muteBtnH = 50;
 
   boolean isMuted = false;
+  
+  PImage logo;
 
   MenuSystem(int w, int h) {
     screenWidth = w;
     screenHeight = h;
     initializeButtons();
     initializeBubbles();
+    
+    //Logo
+    try {
+      logo = loadImage("img/Logo.png");
+    } catch (Exception e) {
+      println("Gagal memuat file img/Logo.png");
+      logo = null;
+    }
   }
 
   void initializeButtons() {
     buttons = new ArrayList<Menu3DButton>();
     int centerX = screenWidth / 2;
-    int centerY = screenHeight / 2;
-
+  
+    // === MODIFIKASI POSISI Y TOMBOL ===
+    // Turunkan titik tengah (centerY) agar semua tombol ikut turun
+    // Kita tambahkan 15% dari tinggi layar (sekitar 90 piksel)
+    int centerY = screenHeight / 2 + (int)(screenHeight * 0.15); // Aslinya: screenHeight / 2
+  
     int buttonWidth = (int)(screenWidth * 0.22);
     int buttonHeight = (int)(screenHeight * 0.065);
     int verticalSpacing = (int)(screenHeight * 0.055);
-
+  
     String[] labels = { "MULAI", "CARA BERMAIN", "PENGATURAN", "KELUAR" };
     color[] colors = {
       color(0, 212, 255),
@@ -36,10 +50,12 @@ class MenuSystem {
       color(102, 255, 204),
       color(255, 107, 107)
     };
-
+    
     int totalHeight = labels.length * buttonHeight + (labels.length - 1) * verticalSpacing;
+    
+    // Perhitungan startY ini akan otomatis ikut turun karena 'centerY' sudah diturunkan
     int startY = centerY - totalHeight / 2 + (int)(screenHeight * 0.05);
-
+    
     for (int i = 0; i < labels.length; i++) {
       int y = startY + i * (buttonHeight + verticalSpacing);
       buttons.add(new Menu3DButton(
@@ -70,7 +86,8 @@ class MenuSystem {
       bubble.update();
       bubble.display();
     }
-
+    
+    drawLogo();
     drawTitle();
 
     for (Menu3DButton btn : buttons) {
@@ -102,27 +119,71 @@ class MenuSystem {
   void drawTitle() {
     hint(DISABLE_DEPTH_TEST);
     glowAmount = sin(frameCount * 0.02) * 0.5 + 0.5;
-
+  
     float titleSize = screenHeight * 0.12;
     float subtitleSize = screenHeight * 0.04;
-
+  
     fill(0, 255, 200);
     textAlign(CENTER);
     textSize((int)titleSize);
-
+  
+    // === MODIFIKASI POSISI Y JUDUL ===
+    // Turunkan Y-axis agar ada ruang untuk logo
+    // Logo ada di 0.15, jadi kita taruh judul di 0.30
+    float titleY = screenHeight * 0.30;
+    float subtitleY = screenHeight * 0.37; // Sub-judul sedikit di bawahnya
+  
     for (int i = 0; i < 3; i++) {
       float alpha = 100 * (1 - i * 0.3) * glowAmount;
       fill(0, 255, 200, alpha);
-      text("MINI INSANIQUARIUM", screenWidth / 2, screenHeight * 0.15 - i * 5);
+      text("MINI INSANIQUARIUM", screenWidth / 2, titleY - i * 5); // Terapkan titleY
     }
-
+  
     fill(255);
-    text("MINI INSANIQUARIUM", screenWidth / 2, screenHeight * 0.15);
+    text("MINI INSANIQUARIUM", screenWidth / 2, titleY); // Terapkan titleY
     textSize((int)subtitleSize);
     fill(160, 230, 229);
-    text("~ Kelola Akuarium Impianmu ~", screenWidth / 2, screenHeight * 0.22);
-
+    text("~ Simulasikan Akuarium mu ~", screenWidth / 2, subtitleY); // Terapkan subtitleY
+  
     hint(ENABLE_DEPTH_TEST);
+  }
+  
+  void drawLogo() {
+    // Pastikan logo sudah dimuat sebelum mencoba menggambarnya
+    if (logo == null) {
+      return; 
+    }
+
+    // Gunakan hint() untuk mematikan depth test, agar gambar 2D
+    // tampil di atas background 3D
+    hint(DISABLE_DEPTH_TEST);
+    noLights();
+
+    pushMatrix();
+    
+    // MODUL 1: Menggunakan imageMode(CENTER) agar posisi x = width/2
+    // benar-benar berada di tengah gambar.
+    imageMode(CENTER);
+
+    // Tentukan ukuran logo yang Anda inginkan
+    float logoWidth = 250;
+    float logoHeight = logo.height * (logoWidth / logo.width); // Menjaga rasio aspek
+
+    // Tentukan Posisi Y
+    // Kita tahu judul ada di screenHeight * 0.15
+    // Jadi, kita letakkan logo di atasnya
+    float logoY = screenHeight * 0.15;
+
+    // MODUL 1: Tampilkan gambar logo [cite: 1362]
+    image(logo, screenWidth / 2, logoY, logoWidth, logoHeight);
+
+    // Kembalikan imageMode ke default agar tidak mempengaruhi elemen lain
+    imageMode(CORNER); 
+    popMatrix();
+
+    // Nyalakan kembali depth test
+    hint(ENABLE_DEPTH_TEST);
+    lights();
   }
 
   void drawFooter() {
@@ -284,7 +345,7 @@ class MenuSystem {
     float itemSpacing = (rightPanelH - 50) / 3;
 
     drawShopItem(itemX, itemY, rightPanelW - 30, 50, 
-      "UPGRADE MAKANAN", "Lv. " + levelMakanan, "100 $");
+      "UPGRADE MakananIkan", "Lv. " + levelMakananIkan, "100 $");
 
     drawShopItem(itemX, itemY + itemSpacing, rightPanelW - 30, 50, 
       "BELI DEKORASI", "Tambah Tanaman", "200 $");

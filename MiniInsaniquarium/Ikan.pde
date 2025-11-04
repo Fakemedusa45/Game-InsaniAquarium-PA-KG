@@ -34,7 +34,7 @@ class Ikan {
     targetPos = new PVector(random(width), random(height));
   }
 
-  void findFood(ArrayList<Makanan> foods) {
+  void findFood(ArrayList<MakananIkan> foods) {
     if (!isAlive) return;
 
     if (hunger < 50 || foods.isEmpty()) {
@@ -44,10 +44,10 @@ class Ikan {
       return;
     }
 
-    Makanan closestFood = foods.get(0);
+    MakananIkan closestFood = foods.get(0);
     float minDistance = pos.dist(closestFood.pos);
 
-    for (Makanan f : foods) {
+    for (MakananIkan f : foods) {
       float d = pos.dist(f.pos);
       if (d < minDistance) {
         minDistance = d;
@@ -62,12 +62,22 @@ class Ikan {
     }
   }
 
-  void eat(ArrayList<Makanan> foods, Makanan f) {
+  void eat(ArrayList<MakananIkan> foods, MakananIkan f) {
     if (!isAlive) return;
     foods.remove(f);
     hunger = 0;
     jatuhkanKoin();
     setNewRandomTarget();
+    
+    if (makanCount >= makanThreshold && ukuran < ukuranMax) {
+      
+      // 3. Perbesar ukuran ikan
+      ukuran += 10;
+      makanCount = 0;
+      
+      // (Opsional: Anda bisa buat koin yang jatuh lebih besar
+      // atau ikan jadi lebih cepat lapar/lambat)
+    }
   }
 
   void jatuhkanKoin() {

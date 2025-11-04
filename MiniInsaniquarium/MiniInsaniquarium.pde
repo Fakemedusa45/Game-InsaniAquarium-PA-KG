@@ -5,7 +5,7 @@ SoundFile suaraBeli;
 SoundFile bgm;
 
 ArrayList<Ikan> daftarIkan = new ArrayList<Ikan>();
-ArrayList<Makanan> daftarMakanan = new ArrayList<Makanan>();
+ArrayList<MakananIkan> MakananIkanIkan = new ArrayList<MakananIkan>();
 ArrayList<Koin> daftarKoin = new ArrayList<Koin>();
 
 int uang = 100;
@@ -15,7 +15,7 @@ int hargaGantiBg = 300;
 PImage bg;
 MenuSystem menuScreen; 
 
-int levelMakanan = 1;
+int levelMakananIkan = 1;
 boolean dekorAktif = false;
 int bgIndex = 0;
 PImage[] daftarBG;
@@ -62,11 +62,17 @@ void setup() {
 
   try {
     // === BUG FIX DI SINI ===
-    daftarBG = new PImage[4]; // Diubah menjadi 4
+    daftarBG = new PImage[10]; // Diubah menjadi 4
     daftarBG[0] = loadImage("img/bg1.png");
     daftarBG[1] = loadImage("img/bg2.png");
     daftarBG[2] = loadImage("img/bg3.png");
-    daftarBG[3] = loadImage("img/bg4.png"); // Diubah menjadi index 3
+    daftarBG[3] = loadImage("img/bg4.jpg");
+    daftarBG[4] = loadImage("img/bg5.png");
+    daftarBG[5] = loadImage("img/bg6.png"); 
+    daftarBG[6] = loadImage("img/bg7.png");
+    daftarBG[7] = loadImage("img/bg8.png");
+    daftarBG[8] = loadImage("img/bg9.jpg");
+    daftarBG[9] = loadImage("img/bg10.png");// Diubah menjadi index 3
     bg = daftarBG[0];
   } catch (Exception e) {
     println("Background image not found - using solid color");
@@ -184,13 +190,13 @@ void drawGameplay() {
     drawDekorasiKecil();
   }
 
-  // Draw Makanan
-  for (int i = daftarMakanan.size() - 1; i >= 0; i--) {
-    if (i < daftarMakanan.size()) {
-      Makanan m = daftarMakanan.get(i);
-      m.jatuh(levelMakanan);
+  // Draw MakananIkan
+  for (int i = MakananIkanIkan.size() - 1; i >= 0; i--) {
+    if (i < MakananIkanIkan.size()) {
+      MakananIkan m = MakananIkanIkan.get(i);
+      m.jatuh(levelMakananIkan);
       m.tampil();
-      if (m.pos.y > height) daftarMakanan.remove(i);
+      if (m.pos.y > height) MakananIkanIkan.remove(i);
     }
   }
 
@@ -200,7 +206,7 @@ void drawGameplay() {
       Ikan ikan = daftarIkan.get(i);
       ikan.update();
       ikan.tampil();
-      ikan.findFood(daftarMakanan);
+      ikan.findFood(MakananIkanIkan);
       if (!ikan.isAlive && ikan.alpha <= 0) daftarIkan.remove(i);
     }
   }
@@ -560,10 +566,10 @@ void mousePressed() {
       gameState = GameState.GAMEPLAY;
       uang = 500; // Mulai dengan uang 500
       daftarIkan.clear();
-      daftarMakanan.clear();
+      MakananIkanIkan.clear();
       daftarKoin.clear();
       dekorAktif = false;
-      levelMakanan = 1;
+      levelMakananIkan = 1;
       // --- BARIS IKAN GRATIS DIHAPUS ---
       // daftarIkan.add(new Ikan(width / 2, height / 2)); 
     } else if (buttonClicked == 2) gameState = GameState.HOW_TO_PLAY;
@@ -593,7 +599,7 @@ void mousePressed() {
     if (itemClicked == 1) {
       if (uang >= 100) {
         uang -= 100;
-        levelMakanan++;
+        levelMakananIkan++;
         if (suaraBeli != null) suaraBeli.play();
       }
     } else if (itemClicked == 2) {
@@ -640,10 +646,10 @@ void mousePressed() {
       mouseY > goBtnMainLagiY && mouseY < goBtnMainLagiY + goBtnH) {
       uang = 500; // Mulai lagi dengan uang 500
       daftarIkan.clear();
-      daftarMakanan.clear();
+      MakananIkanIkan.clear();
       daftarKoin.clear();
       dekorAktif = false;
-      levelMakanan = 1;
+      levelMakananIkan = 1;
       // --- BARIS IKAN GRATIS DIHAPUS ---
       // daftarIkan.add(new Ikan(width / 2, height / 2)); 
       gameState = GameState.GAMEPLAY;
@@ -706,9 +712,9 @@ void mousePressed() {
       }
     }
 
-    // Tambah makanan
+    // Tambah MakananIkan
     if (mouseY > topBarH) { 
-      daftarMakanan.add(new Makanan(mouseX, mouseY));
+      MakananIkanIkan.add(new MakananIkan(mouseX, mouseY));
       if (suaraPlop != null) suaraPlop.play();
     }
   }

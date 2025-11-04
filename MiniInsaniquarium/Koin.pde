@@ -9,7 +9,7 @@ class Koin {
 
   Koin(float x, float y, int n) {
     pos = new PVector(x, y);
-    vel = new PVector(0, 1.0); // Jatuh ke bawah (lebih lambat dari makanan)
+    vel = new PVector(0, 1.0); // Jatuh ke bawah (lebih lambat dari MakananIkan)
     nilai = n;
   }
 
