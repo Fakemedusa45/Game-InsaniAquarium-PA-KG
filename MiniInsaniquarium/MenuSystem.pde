@@ -68,6 +68,8 @@ class MenuSystem {
   }
 
   void display() {
+    updateScreenSize();
+    initializeButtons();
     perspective();
     lights();
     drawGradientBackground();
@@ -87,6 +89,11 @@ class MenuSystem {
 
     drawFooter();
   }
+  void updateScreenSize() {
+  screenWidth = width;
+  screenHeight = height;
+}
+
 
   void drawGradientBackground() {
     hint(DISABLE_DEPTH_TEST);
