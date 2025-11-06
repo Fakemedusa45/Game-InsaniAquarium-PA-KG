@@ -1,12 +1,8 @@
-// =======================================================
-// CLASS MenuSystem
-// =======================================================
 class MenuSystem {
   int screenWidth, screenHeight;
   ArrayList<Menu3DButton> buttons;
   ArrayList<Bubble3D> bubbles;
   float glowAmount = 0;
-
   float backBtnX, backBtnY, backBtnW = 120, backBtnH = 40;
   float muteBtnX, muteBtnY, muteBtnW = 200, muteBtnH = 50;
 
@@ -20,7 +16,6 @@ class MenuSystem {
     initializeButtons();
     initializeBubbles();
     
-    //Logo
     try {
       logo = loadImage("img/Logo.png");
     } catch (Exception e) {
@@ -31,12 +26,9 @@ class MenuSystem {
 
   void initializeButtons() {
     buttons = new ArrayList<Menu3DButton>();
-    int centerX = screenWidth / 2;
+   int centerX = screenWidth / 2;
   
-    // === MODIFIKASI POSISI Y TOMBOL ===
-    // Turunkan titik tengah (centerY) agar semua tombol ikut turun
-    // Kita tambahkan 15% dari tinggi layar (sekitar 90 piksel)
-    int centerY = screenHeight / 2 + (int)(screenHeight * 0.15); // Aslinya: screenHeight / 2
+   int centerY = screenHeight / 2 + (int)(screenHeight * 0.15); // Aslinya: screenHeight / 2
   
     int buttonWidth = (int)(screenWidth * 0.22);
     int buttonHeight = (int)(screenHeight * 0.065);
@@ -52,8 +44,6 @@ class MenuSystem {
     };
     
     int totalHeight = labels.length * buttonHeight + (labels.length - 1) * verticalSpacing;
-    
-    // Perhitungan startY ini akan otomatis ikut turun karena 'centerY' sudah diturunkan
     int startY = centerY - totalHeight / 2 + (int)(screenHeight * 0.05);
     
     for (int i = 0; i < labels.length; i++) {
@@ -127,9 +117,6 @@ class MenuSystem {
     textAlign(CENTER);
     textSize((int)titleSize);
   
-    // === MODIFIKASI POSISI Y JUDUL ===
-    // Turunkan Y-axis agar ada ruang untuk logo
-    // Logo ada di 0.15, jadi kita taruh judul di 0.30
     float titleY = screenHeight * 0.30;
     float subtitleY = screenHeight * 0.37; // Sub-judul sedikit di bawahnya
   
@@ -149,39 +136,23 @@ class MenuSystem {
   }
   
   void drawLogo() {
-    // Pastikan logo sudah dimuat sebelum mencoba menggambarnya
     if (logo == null) {
       return; 
     }
 
-    // Gunakan hint() untuk mematikan depth test, agar gambar 2D
-    // tampil di atas background 3D
-    hint(DISABLE_DEPTH_TEST);
+   hint(DISABLE_DEPTH_TEST);
     noLights();
 
     pushMatrix();
     
-    // MODUL 1: Menggunakan imageMode(CENTER) agar posisi x = width/2
-    // benar-benar berada di tengah gambar.
     imageMode(CENTER);
-
-    // Tentukan ukuran logo yang Anda inginkan
     float logoWidth = 250;
     float logoHeight = logo.height * (logoWidth / logo.width); // Menjaga rasio aspek
 
-    // Tentukan Posisi Y
-    // Kita tahu judul ada di screenHeight * 0.15
-    // Jadi, kita letakkan logo di atasnya
     float logoY = screenHeight * 0.15;
-
-    // MODUL 1: Tampilkan gambar logo [cite: 1362]
-    image(logo, screenWidth / 2, logoY, logoWidth, logoHeight);
-
-    // Kembalikan imageMode ke default agar tidak mempengaruhi elemen lain
+   image(logo, screenWidth / 2, logoY, logoWidth, logoHeight);
     imageMode(CORNER); 
     popMatrix();
-
-    // Nyalakan kembali depth test
     hint(ENABLE_DEPTH_TEST);
     lights();
   }
@@ -479,10 +450,6 @@ class MenuSystem {
     return 0;
   }
 }
-
-// =======================================================
-// CLASS BUBBLE 3D
-// =======================================================
 class Bubble3D {
   float x, y, size, speedY, wobble;
   int screenWidth, screenHeight;
@@ -523,9 +490,6 @@ class Bubble3D {
   }
 }
 
-// =======================================================
-// CLASS MENU 3D BUTTON
-// =======================================================
 class Menu3DButton {
   float x, y, w, h;
   String label;

@@ -91,7 +91,6 @@ void setup() {
     println("Audio files not found. Game will run without sound.");
   }
 
-  // Inisialisasi Palet Warna Top Bar
   btnBiru = color(20, 100, 160);
   btnKuning = color(200, 160, 0);
   btnMerah = color(180, 50, 70);
@@ -123,13 +122,13 @@ void setup() {
   goBtnMenuText = color(230); 
 
   // Inisialisasi Palet Warna CONFIRM POPUP
-  cfModalBgColor = color(18, 43, 74);         // Latar: Biru tua (Sama)
-  cfModalBorderColor = color(200, 160, 0);    // Border: Kuning (Netral)
-  cfTitleTextColor = color(230);              // Judul: Putih
-  cfDescTextColor = color(212);               // Deskripsi: Abu-abu (Sama)
-  cfBtnYesBg = color(180, 50, 70);            // Tombol YES (Keluar): Merah (Aksi bahaya)
+  cfModalBgColor = color(18, 43, 74);        
+  cfModalBorderColor = color(200, 160, 0);    
+  cfTitleTextColor = color(230);              
+  cfDescTextColor = color(212);               
+  cfBtnYesBg = color(180, 50, 70);            
   cfBtnYesText = color(230);
-  cfBtnNoBg = color(74, 107, 138);            // Tombol NO (Batal): Biru (Aksi aman)
+  cfBtnNoBg = color(74, 107, 138);           
   cfBtnNoText = color(230);
 
   surface.setResizable(true);
@@ -462,10 +461,6 @@ void drawConfirmPopup() {
   hint(ENABLE_DEPTH_TEST);
 }
 
-
-// =======================================================
-// === FUNGSI drawGameOverScreen() DENGAN JARAK RAPI ===
-// =======================================================
 void drawGameOverScreen() {
   hint(DISABLE_DEPTH_TEST);
   noLights();
@@ -484,43 +479,32 @@ void drawGameOverScreen() {
   stroke(goModalBorderColor); 
   strokeWeight(3);
   rect(modalX, modalY, modalWidth, modalHeight, 20);
-
-  // === PENGATURAN POSISI (Y) DENGAN SPASI KONSISTEN ===
-  
   float paddingAtas = 60; // Jarak dari atas modal ke judul
   float spasiAntarElemen = 60; // Jarak antar elemen (Judul -> Deskripsi -> Tombol)
-  
-  // Ambil tinggi tombol dari kode di bawah
-  goBtnH = 50; 
 
-  // Tentukan Posisi Y
-  // (Pastikan textAlign(CENTER, CENTER) untuk hasil terbaik)
+  goBtnH = 50; 
   float titleY = modalY + paddingAtas;
   float descY = titleY + spasiAntarElemen;
   float buttonY = descY + spasiAntarElemen; // Tombol akan *dimulai* dari posisi ini
 
-  // Teks "GAME OVER"
   fill(goGameOverTextColor);
-  textAlign(CENTER, CENTER); // Penting: pastikan align-nya CENTER
+  textAlign(CENTER, CENTER); 
   textSize(36);
   text("GAME OVER", width / 2, titleY);
 
-  // Teks Deskripsi
+
   fill(goDescriptionTextColor);
-  textAlign(CENTER, CENTER); // Penting: pastikan align-nya CENTER
+  textAlign(CENTER, CENTER); 
   textSize(18);
   text("Semua ikanmu telah tiada...", width / 2, descY);
 
-  // Pengaturan Tombol
   goBtnW = (modalWidth / 2) - 70;
-  // goBtnH = 50; // (Sudah didefinisikan di atas)
   goBtnMainLagiX = modalX + 50; 
-  goBtnMainLagiY = buttonY; // Menggunakan posisi Y yang baru
+  goBtnMainLagiY = buttonY; 
   
   goBtnMenuX = modalX + modalWidth - goBtnW - 50; 
-  goBtnMenuY = buttonY; // Menggunakan posisi Y yang baru
+  goBtnMenuY = buttonY; 
 
-  // Tombol: Main Lagi
   boolean hoverMainLagi = (mouseX > goBtnMainLagiX && mouseX < goBtnMainLagiX + goBtnW && 
     mouseY > goBtnMainLagiY && mouseY < goBtnMainLagiY + goBtnH);
 
@@ -535,10 +519,8 @@ void drawGameOverScreen() {
   rect(goBtnMainLagiX, goBtnMainLagiY, goBtnW, goBtnH, 12); 
   fill(goBtnMainLagiText);
   textSize(16);
-  textAlign(CENTER, CENTER); // Pastikan Text Align untuk tombol
+  textAlign(CENTER, CENTER);
   text("MAIN LAGI", goBtnMainLagiX + goBtnW / 2, goBtnMainLagiY + goBtnH / 2);
-
-  // Tombol: Menu
   boolean hoverMenuUtama = (mouseX > goBtnMenuX && mouseX < goBtnMenuX + goBtnW && 
     mouseY > goBtnMenuY && mouseY < goBtnMenuY + goBtnH);
 
@@ -570,8 +552,6 @@ void mousePressed() {
       daftarKoin.clear();
       dekorAktif = false;
       levelMakananIkan = 1;
-      // --- BARIS IKAN GRATIS DIHAPUS ---
-      // daftarIkan.add(new Ikan(width / 2, height / 2)); 
     } else if (buttonClicked == 2) gameState = GameState.HOW_TO_PLAY;
     else if (buttonClicked == 3) gameState = GameState.SETTINGS;
     else if (buttonClicked == 4) gameState = GameState.SHOP;
@@ -622,17 +602,12 @@ void mousePressed() {
     if (menuScreen.checkBackButton(mouseX, mouseY)) gameState = GameState.MENU;
     return;
   }
-
-  // === BLOK mousePressed() UNTUK CONFIRM_EXIT DIPERBARUI ===
   if (gameState == GameState.CONFIRM_EXIT) {
-    // Cek klik Tombol YES
     if (mouseX > cfBtnYesX && mouseX < cfBtnYesX + cfBtnW && 
       mouseY > cfBtnYesY && mouseY < cfBtnYesY + cfBtnH) {
       gameState = GameState.MENU;
       return;
     }
-
-    // Cek klik Tombol NO
     if (mouseX > cfBtnNoX && mouseX < cfBtnNoX + cfBtnW && 
       mouseY > cfBtnNoY && mouseY < cfBtnNoY + cfBtnH) {
       gameState = stateBeforeConfirm;
@@ -641,7 +616,6 @@ void mousePressed() {
   }
 
   if (gameState == GameState.GAME_OVER) {
-    // Cek klik MAIN LAGI
     if (mouseX > goBtnMainLagiX && mouseX < goBtnMainLagiX + goBtnW && 
       mouseY > goBtnMainLagiY && mouseY < goBtnMainLagiY + goBtnH) {
       uang = 500; // Mulai lagi dengan uang 500
@@ -650,13 +624,9 @@ void mousePressed() {
       daftarKoin.clear();
       dekorAktif = false;
       levelMakananIkan = 1;
-      // --- BARIS IKAN GRATIS DIHAPUS ---
-      // daftarIkan.add(new Ikan(width / 2, height / 2)); 
       gameState = GameState.GAMEPLAY;
       return;
     }
-
-    // Cek klik MENU UTAMA
     if (mouseX > goBtnMenuX && mouseX < goBtnMenuX + goBtnW && 
       mouseY > goBtnMenuY && mouseY < goBtnMenuY + goBtnH) {
       gameState = GameState.MENU;
@@ -666,15 +636,12 @@ void mousePressed() {
   }
 
   if (gameState == GameState.GAMEPLAY) {
-    // Cek klik MENU
     if (mouseX > btnMenuX && mouseX < btnMenuX + btnMenuW && 
       mouseY > btnMenuY && mouseY < btnMenuY + btnMenuH) {
       stateBeforeConfirm = GameState.GAMEPLAY;
       gameState = GameState.CONFIRM_EXIT;
       return;
     }
-
-    // Cek klik BELI IKAN
     if (mouseX > btnBeliX && mouseX < btnBeliX + btnBeliW && 
       mouseY > btnBeliY && mouseY < btnBeliY + btnBeliH) {
       if (uang >= hargaIkan) { 
@@ -684,8 +651,6 @@ void mousePressed() {
       }
       return;
     }
-
-    // Cek klik GANTI BG
     if (mouseX > btnGantiBgX && mouseX < btnGantiBgX + btnGantiBgW && 
       mouseY > btnGantiBgY && mouseY < btnGantiBgY + btnGantiBgH) {
       if (uang >= hargaGantiBg) { 
@@ -698,8 +663,6 @@ void mousePressed() {
       }
       return;
     }
-
-    // Kumpulkan koin
     for (int i = daftarKoin.size() - 1; i >= 0; i--) {
       if (i < daftarKoin.size()) {
         Koin k = daftarKoin.get(i);
@@ -711,8 +674,6 @@ void mousePressed() {
         }
       }
     }
-
-    // Tambah MakananIkan
     if (mouseY > topBarH) { 
       MakananIkanIkan.add(new MakananIkan(mouseX, mouseY));
       if (suaraPlop != null) suaraPlop.play();

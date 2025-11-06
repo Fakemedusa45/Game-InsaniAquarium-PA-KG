@@ -14,11 +14,11 @@ class Tombol {
     stroke(255);
     strokeWeight(2);
     if (isDiKlik(mouseX, mouseY)) {
-      fill(100, 200, 100); // Hijau saat hover
+      fill(100, 200, 100); 
     } else {
-      fill(50, 150, 50); // Hijau normal
+      fill(50, 150, 50); 
     }
-    rect(x, y, w, h, 10); // Tombol dengan sudut bulat
+    rect(x, y, w, h, 10); 
     
     // Teks
     fill(255);
@@ -26,8 +26,6 @@ class Tombol {
     textSize(16);
     text(label, x + w/2, y + h/2);
   }
-
-  // Method untuk cek jika mouse di atas tombol (untuk Modul 4)
   boolean isDiKlik(float mx, float my) {
     return (mx > x && mx < x + w && my > y && my < y + h);
   }

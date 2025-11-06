@@ -1,22 +1,18 @@
 class MakananIkan {
-  PVector pos;       // Posisi MakananIkan
-  float kecepatan;   // Kecepatan jatuh
-  float ukuran;      // Ukuran MakananIkan
-  color warna;       // Warna MakananIkan
-
+  PVector pos;       
+  float kecepatan;   
+  float ukuran;      
+  color warna;       
   MakananIkan(float x, float y) {
     pos = new PVector(x, y);
-    kecepatan = random(1.5, 2.5);  // Kecepatan dasar
+    kecepatan = random(1.5, 2.5);  
     ukuran = 10;
     warna = color(255, 220, 100);
   }
 
-  // Fungsi jatuh dengan pengaruh level upgrade MakananIkan
   void jatuh(int levelMakananIkan) {
-    // Makin tinggi level, makin cepat jatuh
     pos.y += kecepatan * (1 + (levelMakananIkan - 1) * 0.3);
   }
-
   void tampil() {
     noStroke();
     fill(warna);

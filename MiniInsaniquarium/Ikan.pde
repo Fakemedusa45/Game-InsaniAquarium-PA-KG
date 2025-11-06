@@ -63,22 +63,17 @@ class Ikan {
   }
 
   void eat(ArrayList<MakananIkan> foods, MakananIkan f) {
-    if (!isAlive) return;
-    foods.remove(f);
-    hunger = 0;
-    jatuhkanKoin();
-    setNewRandomTarget();
-    
-    if (makanCount >= makanThreshold && ukuran < ukuranMax) {
-      
-      // 3. Perbesar ukuran ikan
-      ukuran += 10;
-      makanCount = 0;
-      
-      // (Opsional: Anda bisa buat koin yang jatuh lebih besar
-      // atau ikan jadi lebih cepat lapar/lambat)
-    }
+  if (!isAlive) return;
+  foods.remove(f);
+  hunger = 0;
+  jatuhkanKoin();
+  setNewRandomTarget();
+  makanCount++;
+  if (makanCount >= makanThreshold && ukuran < ukuranMax) {
+    ukuran += 10;
+    makanCount = 0;
   }
+}
 
   void jatuhkanKoin() {
     daftarKoin.add(new Koin(pos.x, pos.y, 10));
