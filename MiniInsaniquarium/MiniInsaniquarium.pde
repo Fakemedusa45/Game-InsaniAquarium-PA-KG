@@ -33,25 +33,20 @@ enum GameState {
 GameState gameState = GameState.MENU;
 GameState stateBeforeConfirm;
 
-// Variabel untuk Top Bar
 float topBarH = 65; 
 float btnBeliX, btnBeliY, btnBeliW, btnBeliH;
 float btnGantiBgX, btnGantiBgY, btnGantiBgW, btnGantiBgH;
 float btnMenuX, btnMenuY, btnMenuW, btnMenuH;
 
-// Variabel untuk Game Over Screen
 float goBtnMainLagiX, goBtnMainLagiY, goBtnMenuX, goBtnMenuY, goBtnW, goBtnH;
 color goModalBgColor, goModalBorderColor, goGameOverTextColor, goDescriptionTextColor;
 color goBtnMainLagiBg, goBtnMainLagiText, goBtnMenuBg, goBtnMenuText;
 
-// Variabel untuk Confirm Popup
 float cfModalX, cfModalY, cfModalW, cfModalH;
 float cfBtnYesX, cfBtnYesY, cfBtnNoX, cfBtnNoY, cfBtnW, cfBtnH;
 color cfModalBgColor, cfModalBorderColor, cfTitleTextColor, cfDescTextColor;
 color cfBtnYesBg, cfBtnYesText, cfBtnNoBg, cfBtnNoText;
 
-
-// Palet Warna UI Top Bar
 color btnBiru, btnKuning, btnMerah, btnDisabled;
 color borderCerah, borderHover, borderDisabled;
 color textDisabled, textCerah;
@@ -61,7 +56,6 @@ void setup() {
   size(800, 600, P3D);
 
   try {
-    // === BUG FIX DI SINI ===
     daftarBG = new PImage[10]; // Diubah menjadi 4
     daftarBG[0] = loadImage("img/bg1.png");
     daftarBG[1] = loadImage("img/bg2.png");
@@ -103,15 +97,12 @@ void setup() {
   textDisabled = color(180);
   textCerah = color(230);
 
-  // Ukuran Tombol Top Bar
   btnMenuW = 90; 
   btnGantiBgW = 110; 
   btnBeliW = 110; 
   btnMenuH = 40; 
   btnGantiBgH = 40; 
   btnBeliH = 40; 
-
-  // Inisialisasi Palet Warna GAME OVER
   goModalBgColor = color(18, 43, 74); 
   goModalBorderColor = color(101, 214, 173); 
   goGameOverTextColor = color(224, 108, 117); 
@@ -120,8 +111,6 @@ void setup() {
   goBtnMainLagiText = color(30); 
   goBtnMenuBg = color(74, 107, 138); 
   goBtnMenuText = color(230); 
-
-  // Inisialisasi Palet Warna CONFIRM POPUP
   cfModalBgColor = color(18, 43, 74);        
   cfModalBorderColor = color(200, 160, 0);    
   cfTitleTextColor = color(230);              
@@ -163,7 +152,6 @@ void draw() {
       menuScreen.drawSettings();
     } else if (stateBeforeConfirm == GameState.SHOP) {
       menuScreen.display(); 
-      menuScreen.drawShop();
     }
     drawConfirmPopup();
     break;
@@ -199,7 +187,6 @@ void drawGameplay() {
     }
   }
 
-  // Draw Ikan
   for (int i = daftarIkan.size() - 1; i >= 0; i--) {
     if (i < daftarIkan.size()) {
       Ikan ikan = daftarIkan.get(i);
@@ -210,7 +197,6 @@ void drawGameplay() {
     }
   }
 
-  // Draw Koin
   for (int i = daftarKoin.size() - 1; i >= 0; i--) {
     if (i < daftarKoin.size()) {
       Koin k = daftarKoin.get(i);
@@ -374,11 +360,7 @@ void drawTopBar() {
   hint(ENABLE_DEPTH_TEST);
   lights();
 }
-
-
-// =======================================================
-// === FUNGSI drawConfirmPopup() DIPERBAIKI TOTAL      ===
-// =======================================================
+ 
 void drawConfirmPopup() {
   hint(DISABLE_DEPTH_TEST);
   noLights();
@@ -425,7 +407,6 @@ void drawConfirmPopup() {
   cfBtnNoX = cfModalX + cfModalW - cfBtnW - 50; // Padding 50px
   cfBtnNoY = buttonY;
 
-  // Tombol: YA, KEMBALI (Aksi "Berbahaya")
   boolean hoverYes = (mouseX > cfBtnYesX && mouseX < cfBtnYesX + cfBtnW && 
     mouseY > cfBtnYesY && mouseY < cfBtnYesY + cfBtnH);
 
@@ -441,8 +422,6 @@ void drawConfirmPopup() {
   fill(cfBtnYesText);
   textSize(16);
   text("YA, KEMBALI", cfBtnYesX + cfBtnW / 2, cfBtnYesY + cfBtnH / 2);
-
-  // Tombol: TIDAK, BATAL (Aksi "Aman")
   boolean hoverNo = (mouseX > cfBtnNoX && mouseX < cfBtnNoX + cfBtnW && 
     mouseY > cfBtnNoY && mouseY < cfBtnNoY + cfBtnH);
 
@@ -542,11 +521,11 @@ void drawGameOverScreen() {
 
 
 void mousePressed() {
-  if (gameState == GameState.MENU) {
+   if (gameState == GameState.MENU) {
     int buttonClicked = menuScreen.checkButtonClick(mouseX, mouseY);
-    if (buttonClicked == 1) { // MULAI
+    if (buttonClicked == 1) { 
       gameState = GameState.GAMEPLAY;
-      uang = 500; // Mulai dengan uang 500
+      uang = 500;
       daftarIkan.clear();
       MakananIkanIkan.clear();
       daftarKoin.clear();
@@ -554,11 +533,16 @@ void mousePressed() {
       levelMakananIkan = 1;
     } else if (buttonClicked == 2) gameState = GameState.HOW_TO_PLAY;
     else if (buttonClicked == 3) gameState = GameState.SETTINGS;
-    else if (buttonClicked == 4) gameState = GameState.SHOP;
-    else if (buttonClicked == 5) exit();
+    else if (buttonClicked == 4) {
+  if (bgm != null) bgm.stop();
+  if (suaraPlop != null) suaraPlop.stop();
+  if (suaraKoin != null) suaraKoin.stop();
+  if (suaraBeli != null) suaraBeli.stop();
+  noLoop();
+  exit();
+}
     return;
   }
-
   if (gameState == GameState.HOW_TO_PLAY) {
     if (menuScreen.checkBackButton(mouseX, mouseY)) gameState = GameState.MENU;
     return;

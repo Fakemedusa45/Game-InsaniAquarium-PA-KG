@@ -9,7 +9,6 @@ class Tombol {
     this.h = h;
     this.label = label;
   }
-
   void tampil() {
     stroke(255);
     strokeWeight(2);
@@ -19,8 +18,6 @@ class Tombol {
       fill(50, 150, 50); 
     }
     rect(x, y, w, h, 10); 
-    
-    // Teks
     fill(255);
     textAlign(CENTER, CENTER);
     textSize(16);

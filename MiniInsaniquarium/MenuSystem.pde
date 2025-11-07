@@ -39,7 +39,6 @@ class MenuSystem {
       color(0, 212, 255),
       color(255, 215, 0),
       color(160, 160, 160),
-      color(102, 255, 204),
       color(255, 107, 107)
     };
     
@@ -59,29 +58,24 @@ class MenuSystem {
         ));
     }
   }
-
   void initializeBubbles() {
     bubbles = new ArrayList<Bubble3D>();
     for (int i = 0; i < 20; i++) {
       bubbles.add(new Bubble3D(random(screenWidth), random(screenHeight), random(10, 40), screenWidth, screenHeight));
     }
   }
-
   void display() {
     updateScreenSize();
     initializeButtons();
     perspective();
     lights();
     drawGradientBackground();
-
     for (Bubble3D bubble : bubbles) {
       bubble.update();
       bubble.display();
     }
-    
     drawLogo();
     drawTitle();
-
     for (Menu3DButton btn : buttons) {
       btn.update(mouseX, mouseY);
       btn.display();
@@ -251,89 +245,6 @@ class MenuSystem {
     text(isMuted ? "Unmute Musik" : "Mute Musik", screenWidth / 2, muteBtnY + muteBtnH / 2);
 
     drawBackButton(screenHeight * 0.9);
-  }
-
-  void drawShop() {
-    hint(DISABLE_DEPTH_TEST);
-    fill(0, 0, 0, 150);
-    rect(0, 0, screenWidth, screenHeight);
-
-    float modalWidth = screenWidth * 0.9;
-    float modalHeight = screenHeight * 0.9;
-    float modalX = (screenWidth - modalWidth) / 2;
-    float modalY = (screenHeight - modalHeight) / 2;
-
-    fill(10, 31, 63);
-    stroke(102, 255, 204);
-    strokeWeight(3);
-    rect(modalX, modalY, modalWidth, modalHeight, 20);
-
-    fill(102, 255, 204);
-    textAlign(CENTER);
-    textSize((int)(screenHeight * 0.07));
-    text("TOKO UPGRADE", screenWidth / 2, modalY + 50);
-
-    float leftPanelX = modalX + 30;
-    float leftPanelY = modalY + 100;
-    float leftPanelW = modalWidth * 0.45;
-    float leftPanelH = modalHeight - 150;
-
-    float rightPanelX = leftPanelX + leftPanelW + 30;
-    float rightPanelY = leftPanelY;
-    float rightPanelW = modalWidth * 0.45;
-    float rightPanelH = modalHeight - 150;
-
-    // LEFT PANEL: PREVIEW
-    fill(30, 60, 90);
-    stroke(0, 212, 255);
-    strokeWeight(2);
-    rect(leftPanelX, leftPanelY, leftPanelW, leftPanelH, 10);
-
-    fill(0, 212, 255);
-    textAlign(CENTER);
-    textSize((int)(screenHeight * 0.04));
-    text("PREVIEW", leftPanelX + leftPanelW / 2, leftPanelY + 25);
-
-    float previewW = leftPanelW - 30;
-    float previewH = leftPanelH - 80;
-    float previewX = leftPanelX + 15;
-    float previewY = leftPanelY + 50;
-
-    fill(20, 40, 80);
-    stroke(0, 150, 180);
-    strokeWeight(1);
-    rect(previewX, previewY, previewW, previewH, 5);
-
-    if (daftarBG != null && bgIndex < daftarBG.length && daftarBG[bgIndex] != null) {
-      image(daftarBG[bgIndex], previewX, previewY, previewW, previewH);
-    }
-
-    fill(255);
-    textAlign(CENTER);
-    textSize((int)(screenHeight * 0.025));
-    text("Background #" + (bgIndex + 1), leftPanelX + leftPanelW / 2, previewY + previewH + 25);
-
-    // RIGHT PANEL: ITEMS
-    fill(224, 224, 224);
-    textSize((int)(screenHeight * 0.03));
-    textAlign(LEFT);
-
-    float itemX = rightPanelX + 15;
-    float itemY = rightPanelY + 30;
-    float itemSpacing = (rightPanelH - 50) / 3;
-
-    drawShopItem(itemX, itemY, rightPanelW - 30, 50, 
-      "UPGRADE MakananIkan", "Lv. " + levelMakananIkan, "100 $");
-
-    drawShopItem(itemX, itemY + itemSpacing, rightPanelW - 30, 50, 
-      "BELI DEKORASI", "Tambah Tanaman", "200 $");
-
-    drawShopItem(itemX, itemY + itemSpacing * 2, rightPanelW - 30, 50, 
-      "GANTI BACKGROUND", "Next BG", "300 $");
-
-    drawBackButton(modalY + modalHeight);
-
-    hint(ENABLE_DEPTH_TEST);
   }
 
   void drawShopItem(float x, float y, float w, float h, String title, String desc, String price) {
