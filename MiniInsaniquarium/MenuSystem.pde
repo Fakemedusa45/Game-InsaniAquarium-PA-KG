@@ -28,7 +28,7 @@ class MenuSystem {
     buttons = new ArrayList<Menu3DButton>();
    int centerX = screenWidth / 2;
   
-   int centerY = screenHeight / 2 + (int)(screenHeight * 0.15); // Aslinya: screenHeight / 2
+   int centerY = screenHeight / 2 + (int)(screenHeight * 0.15);
   
     int buttonWidth = (int)(screenWidth * 0.22);
     int buttonHeight = (int)(screenHeight * 0.065);
@@ -119,19 +119,19 @@ class MenuSystem {
     textSize((int)titleSize);
   
     float titleY = screenHeight * 0.30;
-    float subtitleY = screenHeight * 0.37; // Sub-judul sedikit di bawahnya
+    float subtitleY = screenHeight * 0.37; 
   
     for (int i = 0; i < 3; i++) {
       float alpha = 100 * (1 - i * 0.3) * glowAmount;
       fill(0, 255, 200, alpha);
-      text("MINI INSANIQUARIUM", screenWidth / 2, titleY - i * 5); // Terapkan titleY
+      text("MINI INSANIQUARIUM", screenWidth / 2, titleY - i * 5); 
     }
   
     fill(255);
-    text("MINI INSANIQUARIUM", screenWidth / 2, titleY); // Terapkan titleY
+    text("MINI INSANIQUARIUM", screenWidth / 2, titleY);
     textSize((int)subtitleSize);
     fill(160, 230, 229);
-    text("~ Simulasikan Akuarium mu ~", screenWidth / 2, subtitleY); // Terapkan subtitleY
+    text("~ Simulasikan Akuarium mu ~", screenWidth / 2, subtitleY);
   
     hint(ENABLE_DEPTH_TEST);
   }
@@ -163,7 +163,7 @@ class MenuSystem {
     fill(255, 255, 255, 150);
     textSize(12);
     textAlign(RIGHT);
-    text("Dibuat dengan Processing", screenWidth - 20, screenHeight - 20);
+    text("Dibuat oleh Kelompok A7", screenWidth - 20, screenHeight - 20);
     text("Mini Insaniquarium v1.0", screenWidth - 20, screenHeight - 5);
     hint(ENABLE_DEPTH_TEST);
   }

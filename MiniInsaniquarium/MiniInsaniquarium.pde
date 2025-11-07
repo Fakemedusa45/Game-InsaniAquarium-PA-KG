@@ -56,7 +56,7 @@ void setup() {
   size(800, 600, P3D);
 
   try {
-    daftarBG = new PImage[10]; // Diubah menjadi 4
+    daftarBG = new PImage[10]; 
     daftarBG[0] = loadImage("img/bg1.png");
     daftarBG[1] = loadImage("img/bg2.png");
     daftarBG[2] = loadImage("img/bg3.png");
@@ -66,7 +66,7 @@ void setup() {
     daftarBG[6] = loadImage("img/bg7.png");
     daftarBG[7] = loadImage("img/bg8.png");
     daftarBG[8] = loadImage("img/bg9.jpg");
-    daftarBG[9] = loadImage("img/bg10.png");// Diubah menjadi index 3
+    daftarBG[9] = loadImage("img/bg10.png");
     bg = daftarBG[0];
   } catch (Exception e) {
     println("Background image not found - using solid color");
@@ -187,6 +187,7 @@ void drawGameplay() {
     }
   }
 
+  // Manage Ikan
   for (int i = daftarIkan.size() - 1; i >= 0; i--) {
     if (i < daftarIkan.size()) {
       Ikan ikan = daftarIkan.get(i);
@@ -196,7 +197,8 @@ void drawGameplay() {
       if (!ikan.isAlive && ikan.alpha <= 0) daftarIkan.remove(i);
     }
   }
-
+  
+  //Manage Koin
   for (int i = daftarKoin.size() - 1; i >= 0; i--) {
     if (i < daftarKoin.size()) {
       Koin k = daftarKoin.get(i);
@@ -372,7 +374,7 @@ void drawConfirmPopup() {
 
   // Kalkulasi Ukuran & Posisi Modal
   cfModalW = width * 0.6;
-  cfModalH = height * 0.4; // Dibuat sedikit lebih ringkas
+  cfModalH = height * 0.4; 
   cfModalX = (width - cfModalW) / 2;
   cfModalY = (height - cfModalH) / 2;
 
